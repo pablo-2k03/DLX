@@ -4,26 +4,32 @@ PrintFormat:	.asciiz	"%d\n"
 PrintPar:		.word	PrintFormat
 PrintValue:		.space	4
 ;; VARIABLES DE ENTRADA Y SALIDA: NO MODIFICAR ORDEN 
-valor_inicial:	.word	3
+valor_inicial:	.word	97
 
-;; Variables de salida
+;; VARIABLES DE SALIDA
 secuencia:		.space	120*4
 secuencia_tamanho:	.word	0
 secuencia_maximo:	.word	0
 secuencia_valor_medio:	.float	0
 lista:			.space	9*4
 lista_valor_medio:	.float	0
-;; Fin de variables de entrada y salida
+;; FIN VARIABLES DE ENTRADA Y SALIDA
 
 ;; Variables auxiliares
 contador:		.word	0
 lista_tamanho:	.word	0
+
 				.text
 				.global main
 main:
 	
 	lw		r1, valor_inicial ;; Cargar valor inicial en r1
 	sw		secuencia, r1	  ;; Guardar valor inicial en secuencia
+
+	sw		secuencia_maximo, r0 ;; Inicializar máximo de la secuencia
+	sw		contador, r0 ;; Inicializar contador
+	sw		lista_tamanho, r0 ;; Inicializar tamaño de la lista
+	sw 		secuencia_tamanho, r0 ;; Inicializar tamaño de la secuencia
 
 	add		r2,r0,r1
 	add		r3,r0,r2
@@ -97,6 +103,7 @@ finish:
 
 rellenar_lista:
 
+	;; INDICE 0
 	lw 		r20, valor_inicial ;; Cargar valor inicial en r20
 	lw		r21, secuencia_tamanho ;; Cargar tamaño de la secuencia en r21
 	mult 	r22,r20,r21 ;; Multiplicar valor inicial por tamaño de la secuencia
@@ -107,15 +114,68 @@ rellenar_lista:
 	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
 	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
 
+
+	;; INDICE 1
+
 	lw		r23, secuencia_maximo ;; Cargar máximo de la secuencia en r23
 	lw		r21, secuencia_tamanho ;; Cargar tamaño de la secuencia en r21
 	mult 	r24, r23, r21 ;; Multiplicar máximo por tamaño de la secuencia
 	
+	;; Desplazamiento de 4
 	lw 		r20, lista_tamanho ;; Cargar tamaño de la lista en r20
 	addi 	r21,r0,#4
 	mult 	r22, r20, r21 ;; Multiplicar tamaño de la lista por 4
 	sw 		lista(r22), r24 ;; Guardar máximo en lista
 
+	;;Incremento del tamaño de la lista
+	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
+	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
+	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+
+	;; INDICE 2
+	lw 		r20, secuencia_valor_medio ;; Cargar valor medio de la secuencia en r20
+	lw		r21, secuencia_tamanho ;; Cargar tamaño de la secuencia en r21
+	mult 	r22, r20, r21 ;; Multiplicar valor medio por tamaño de la secuencia
+
+	;; Desplazamiento de 4
+	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
+	addi 	r21,r0,#4
+	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
+	sw 		lista(r18), r22 ;; Guardar valor medio en lista
+
+	;;Incremento del tamaño de la lista
+	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
+	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
+	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+
+	;; INDICE 3
+	lw 		r20, valor_inicial ;; Cargar tamaño de la secuencia en r20
+	lw 		r21, secuencia_maximo ;; Cargar máximo de la secuencia en r21
+	lw		r22, secuencia_tamanho ;; Cargar tamaño de la secuencia en r22
+
+	movi2fp	f1,r20 ;; Cargar valor inicial en f1
+	cvti2f 	f1, f1 ;; Convertir valor inicial a flotante
+	movi2fp	f2,r21 ;; Cargar máximo en f2
+	cvti2f 	f2, f2 ;; Convertir máximo a flotante
+
+	divf 	f3, f1, f2 ;; (vIni / vMax)
+	movi2fp	f1,r22
+	cvti2f 	f1, f1
+	multf 	f4, f3, f1  ;; ((vIni / vMax) * vT)
+
+	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
+	movfp2i	r24,f4 ;; Guardar resultado operación en r24
+
+	;; Desplazamiento de 4
+	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
+	addi 	r21,r0,#4
+	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
+	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+
+	;;Incremento del tamaño de la lista
+	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
+	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
+	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
 
 acabar:
 	trap	0
