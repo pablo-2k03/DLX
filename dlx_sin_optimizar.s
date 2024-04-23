@@ -4,7 +4,7 @@ PrintFormat:	.asciiz	"%d\n"
 PrintPar:		.word	PrintFormat
 PrintValue:		.space	4
 ;; VARIABLES DE ENTRADA Y SALIDA: NO MODIFICAR ORDEN 
-valor_inicial:	.word	3
+valor_inicial:	.word	97
 
 ;; VARIABLES DE SALIDA
 secuencia:		.space	120*4
@@ -109,11 +109,7 @@ rellenar_lista:
 	mult 	r22,r20,r21 ;; Multiplicar valor inicial por tamaño de la secuencia
 	sw 		lista, r22 ;; Guardar valor inicial en lista
 	
-	;;Incremento del tamaño de la lista
-	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
-
+	jal incrementar_tamanno
 
 	;; INDICE 1
 
@@ -121,32 +117,18 @@ rellenar_lista:
 	lw		r21, secuencia_tamanho ;; Cargar tamaño de la secuencia en r21
 	mult 	r24, r23, r21 ;; Multiplicar máximo por tamaño de la secuencia
 	
-	;; Desplazamiento de 4
-	lw 		r20, lista_tamanho ;; Cargar tamaño de la lista en r20
-	addi 	r21,r0,#4
-	mult 	r22, r20, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r22), r24 ;; Guardar máximo en lista
+	jal hacer_desplazamiento
 
-	;;Incremento del tamaño de la lista
-	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+	jal incrementar_tamanno
 
 	;; INDICE 2
 	lw 		r20, secuencia_valor_medio ;; Cargar valor medio de la secuencia en r20
 	lw		r21, secuencia_tamanho ;; Cargar tamaño de la secuencia en r21
 	mult 	r22, r20, r21 ;; Multiplicar valor medio por tamaño de la secuencia
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r22 ;; Guardar valor medio en lista
+	jal hacer_desplazamiento
 
-	;;Incremento del tamaño de la lista
-	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+	jal incrementar_tamanno
 
 	;; INDICE 3
 	lw 		r20, valor_inicial ;; Cargar tamaño de la secuencia en r20
@@ -166,16 +148,9 @@ rellenar_lista:
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+	jal hacer_desplazamiento
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+	jal incrementar_tamanno
 
 	;; INDICE 4
 	lw 		r20, valor_inicial ;; Cargar tamaño de la secuencia en r20
@@ -195,16 +170,9 @@ rellenar_lista:
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+	jal hacer_desplazamiento
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+	jal incrementar_tamanno
 
 	;; INDICE 5
 	lw 		r20, secuencia_maximo ;; Cargar tamaño de la secuencia en r20
@@ -224,16 +192,9 @@ rellenar_lista:
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+	jal hacer_desplazamiento
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+	jal incrementar_tamanno
 
 	;; INDICE 6
 	lw 		r20, secuencia_maximo ;; Cargar tamaño de la secuencia en r20
@@ -253,16 +214,9 @@ rellenar_lista:
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+	jal hacer_desplazamiento
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+	jal incrementar_tamanno
 
 	;; INDICE 7
 	lw 		r20, secuencia_valor_medio ;; Cargar tamaño de la secuencia en r20
@@ -282,16 +236,9 @@ rellenar_lista:
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+	jal hacer_desplazamiento
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+	jal incrementar_tamanno
 
 	;; INDICE 8
 	lw 		r20, secuencia_valor_medio ;; Cargar tamaño de la secuencia en r20
@@ -311,15 +258,22 @@ rellenar_lista:
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
+	jal hacer_desplazamiento
+
+	jal incrementar_tamanno
+	j acabar
+
+hacer_desplazamiento:
 	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
 	addi 	r21,r0,#4
 	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
 	sw 		lista(r18), r24 ;; Guardar valor medio en lista
-
+	jr 		r31
+incrementar_tamanno:
 	;;Incremento del tamaño de la lista
 	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
 	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
 	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+	jr 		r31
 acabar:
 	trap	0
