@@ -99,12 +99,13 @@ rellenar_lista:
 
 	mult 	r22,r20,r21 ;; Multiplicar valor inicial por tamaño de la secuencia
 
-	sw 		lista, r22 ;; Guardar valor inicial en lista
-	
-	;;Incremento del tamaño de la lista
+    ;;Incremento del tamaño de la lista
 	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
 	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+
+    sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+	sw 		lista, r22 ;; Guardar valor inicial en lista
+	
 
 	;; INDICE 1
 
@@ -122,9 +123,10 @@ rellenar_lista:
 	sw 		lista(r22), r24 ;; Guardar máximo en lista
 
 	;;Incremento del tamaño de la lista
-	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
+	addi 	r24, r20, 1 ;; Incrementar tamaño de la lista
 	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+
+
 
 	;; INDICE 2
 	lw 		r20, secuencia_valor_medio ;; Cargar valor medio de la secuencia en r20
@@ -134,27 +136,30 @@ rellenar_lista:
 	;; Desplazamiento de 4
 	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
 	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r22 ;; Guardar valor medio en lista
 
-	;;Incremento del tamaño de la lista
-	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r24, r24, 1 ;; Incrementar tamaño de la lista
+	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
+
+    ;;Incremento del tamaño de la lista
+	addi 	r24, r19, 1 ;; Incrementar tamaño de la lista
 	sw 		lista_tamanho, r24 ;; Guardar tamaño de la lista
+
+	sw 		lista(r18), r22 ;; Guardar valor medio en lista
 
 	;; INDICE 3
 	lw 		r20, valor_inicial ;; Cargar tamaño de la secuencia en r20
-	lw 		r21, secuencia_maximo ;; Cargar máximo de la secuencia en r21
-	lw		r22, secuencia_tamanho ;; Cargar tamaño de la secuencia en r22
-
 	movi2fp	f1,r20 ;; Cargar valor inicial en f1
 	cvti2f 	f1, f1 ;; Convertir valor inicial a flotante
+
+    lw 		r21, secuencia_maximo ;; Cargar máximo de la secuencia en r21
 	movi2fp	f2,r21 ;; Cargar máximo en f2
 	cvti2f 	f2, f2 ;; Convertir máximo a flotante
 
 	divf 	f3, f1, f2 ;; (vIni / vMax)
+
+    lw		r22, secuencia_tamanho ;; Cargar tamaño de la secuencia en r22
 	movi2fp	f1,r22
 	cvti2f 	f1, f1
+
 	multf 	f4, f3, f1  ;; ((vIni / vMax) * vT)
 
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
@@ -164,12 +169,15 @@ rellenar_lista:
 	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
 	addi 	r21,r0,#4
 	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
+
+    ;;Incremento del tamaño de la lista
+	addi 	r1, r19, 1 ;; Incrementar tamaño de la lista
+	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+
 	sw 		lista(r18), r24 ;; Guardar valor medio en lista
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
-	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+
+;;================================================================================================
 
 	;; INDICE 4
 	lw 		r20, valor_inicial ;; Cargar tamaño de la secuencia en r20
