@@ -4,7 +4,7 @@ PrintFormat:	.asciiz	"%d\n"
 PrintPar:		.word	PrintFormat
 PrintValue:		.space	4
 ;; VARIABLES DE ENTRADA Y SALIDA: NO MODIFICAR ORDEN 
-valor_inicial:	.word	3
+valor_inicial:	.word	97
 
 ;; VARIABLES DE SALIDA
 secuencia:		.space	120*4
@@ -39,25 +39,30 @@ main:
 loop:
     ;;Incrementar el tamaño de la secuencia
 	lw		r20, secuencia_tamanho ;; Cargar tamaño de la secuencia en r20
-	addi	r20, r20, 1 ;; Incrementar tamaño de la secuencia
+    lw		r21, contador ;; Cargar contador en r20
+    lw		r22, secuencia_maximo ;; Cargar máximo de la secuencia en r22
+    lw		r23, secuencia_tamanho ;; Cargar tamaño de la secuencia en r23
+    
+	;;Guardar valor actual en la secuencia
+	
+	addi 	r24,r0,#4 ;; Cargar en r24 el valor inmediato 4
+	mult	r25,r23,r24 ;; Multiplicar el tamaño de la secuencia por 4
+
+    addi	r20, r20, 1 ;; Incrementar tamaño de la secuencia
 	sw		secuencia_tamanho, r20 
 
 	;;Incrementar el contador
-	lw		r21, contador ;; Cargar contador en r20
+	
 	add 	r21, r21, r3  ;; Incrementamos en r21 el valor actual de r3
 	sw		contador, r21 ;; Guardar contador
 
-	;;Guardar valor actual en la secuencia
-	lw		r23, secuencia_tamanho ;; Cargar tamaño de la secuencia en r23
-	addi 	r24,r0,#4 ;; Cargar en r24 el valor inmediato 4
-	mult	r25,r23,r24 ;; Multiplicar el tamaño de la secuencia por 4
 	sw 		secuencia(r25), r3 ;; Guardar valor actual en la secuencia
 
 
 	;;Verificar si el valor actual es mayor al máximo
-	lw		r21, secuencia_maximo ;; Cargar máximo de la secuencia en r21
-    slt r22, r3, r21 ;; Comprobar si r3 < r21, en caso afirmativo, r22 = 1
-    beqz r22, maximo ;; Si r22 = 0, saltar a maximo
+	
+    slt r26, r3, r22 ;; Comprobar si r3 < r21, en caso afirmativo, r22 = 1
+    beqz r26, maximo ;; Si r22 = 0, saltar a maximo
     
 continua:
 	subi	r6,r3,1
@@ -97,7 +102,8 @@ rellenar_lista:
 	lw 		r20, valor_inicial ;; Cargar valor inicial en r20
 	lw		r21, secuencia_tamanho ;; Cargar tamaño de la secuencia en r21
 
-	mult 	r22,r20,r21 ;; Multiplicar valor inicial por tamaño de la secuencia
+
+    mult     r22, r20, r21 ;; Multiplicar valor inicial por tamaño de la secuencia
 
     ;;Incremento del tamaño de la lista
 	lw 		r24, lista_tamanho ;; Cargar tamaño de la lista en r24
@@ -177,7 +183,6 @@ rellenar_lista:
 	sw 		lista(r18), r24 ;; Guardar valor medio en lista
 
 
-;;================================================================================================
 
 	;; INDICE 4
 	lw 		r20, valor_inicial ;; Cargar tamaño de la secuencia en r20
@@ -201,12 +206,12 @@ rellenar_lista:
 	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
 	addi 	r21,r0,#4
 	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
+    ;;Incremento del tamaño de la lista
+	addi 	r1, r19, 1 ;; Incrementar tamaño de la lista
 	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+
+	sw 		lista(r18), r24 ;; Guardar valor medio en lista
 
 	;; INDICE 5
 	lw 		r20, secuencia_maximo ;; Cargar tamaño de la secuencia en r20
@@ -221,21 +226,25 @@ rellenar_lista:
 	divf 	f3, f1, f2 ;; (vMax / vIni)
 	movi2fp	f1,r22
 	cvti2f 	f1, f1
+
+    ;; Desplazamiento de 4
+	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
+	addi 	r21,r0,#4
+
 	multf 	f4, f3, f1  ;; ((vMax / vIni) * vT)
 
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
 
-	;;Incremento del tamaño de la lista
-	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
-	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
+	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
+    
+	addi 	r1, r19, 1 ;; Incrementar tamaño de la lista
 	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+
+	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+;;================================================================================================
+
 
 	;; INDICE 6
 	lw 		r20, secuencia_maximo ;; Cargar tamaño de la secuencia en r20
