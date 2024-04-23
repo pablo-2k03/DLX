@@ -243,7 +243,6 @@ rellenar_lista:
 	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
 
 	sw 		lista(r18), r24 ;; Guardar valor medio en lista
-;;================================================================================================
 
 
 	;; INDICE 6
@@ -259,21 +258,25 @@ rellenar_lista:
 	divf 	f3, f1, f2 ;; (vMax / vMed)
 	movi2fp	f1,r22
 	cvti2f 	f1, f1
+
+    ;; Desplazamiento de 4
+	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
+	addi 	r29,r0,#4
+
 	multf 	f4, f3, f1  ;; ((vMax / vMed) * vT)
 
 	cvtf2i 	f4, f4 ;; Convertir resultado del registro f4 a entero
 	movfp2i	r24,f4 ;; Guardar resultado operación en r24
 
-	;; Desplazamiento de 4
-	lw 		r19, lista_tamanho ;; Cargar tamaño de la lista en r19
-	addi 	r21,r0,#4
-	mult 	r18, r19, r21 ;; Multiplicar tamaño de la lista por 4
-	sw 		lista(r18), r24 ;; Guardar valor medio en lista
-
-	;;Incremento del tamaño de la lista
+    	;;Incremento del tamaño de la lista
 	lw 		r1, lista_tamanho ;; Cargar tamaño de la lista en r24
 	addi 	r1, r1, 1 ;; Incrementar tamaño de la lista
 	sw 		lista_tamanho, r1 ;; Guardar tamaño de la lista
+
+	mult 	r18, r19, r29 ;; Multiplicar tamaño de la lista por 4
+	sw 		lista(r18), r24 ;; Guardar valor medio en lista
+
+
 
 	;; INDICE 7
 	lw 		r20, secuencia_valor_medio ;; Cargar tamaño de la secuencia en r20
