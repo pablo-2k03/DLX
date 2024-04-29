@@ -1,7 +1,7 @@
 	.data
 
 ;; VARIABLES DE ENTRADA Y SALIDA: NO MODIFICAR ORDEN 
-valor_inicial:	.word	97
+valor_inicial:	.word	10
 
 ;; VARIABLES DE SALIDA
 secuencia:		.space	120*4
@@ -44,13 +44,11 @@ loop:
 
 	addi	r20, r7, 1 ;; Incrementar tamaño de la secuencia
     add		r8, r8, r3 ;; Sumar al contador el valor actual de la secuencia
+    
+    slli    r24, r7, 2              ;; Multiplicar el tamaño de la secuencia por 4 (desplazamiento de bits)
 
-    addi 	r24,r0,#4 ;; Cargar en r24 el valor inmediato 4
-	mult	r25,r7,r24 ;; Multiplicar el tamaño de la secuencia por 4
-
-
-    sw		secuencia_tamanho, r20 
-    sw 		secuencia(r25), r3 
+    sw		secuencia_tamanho, r20  
+    sw 		secuencia(r24), r3 
     sw		contador, r8 ;; Guardar contador en r8
 
     ;;Verificar si el valor actual es mayor al máximo
@@ -77,7 +75,7 @@ maximo:
 finish:
     ;; Calculamos el valor medio de la secuencia
     lw      r7, secuencia_tamanho ;; Cargar tamaño de la secuencia en r7
-        lf f25, valor_uno ;; En f25 tenemos 1.0
+    lf f25, valor_uno ;; En f25 tenemos 1.0
 
     movi2fp f0, r7
     movi2fp f11,r8
@@ -96,7 +94,7 @@ finish:
     movi2fp f5, r1
     cvti2f  f5,f5               ;; Pasamos el valor inicial a flotante
 
-    multf   f2,f5,f0
+    multf   f2,f5,f0            ;; Correspondiente a INDICE 0
 
 
 rellenar_lista:
@@ -105,19 +103,19 @@ rellenar_lista:
 
 ;; ================== INDICE 0 =========================
 ;; vIni * vT
-    divf f6, f25,f12  ;; f6 = 1.0/vMax(f12)
+    divf f6, f25,f12  ;; f6 = 1.0/vMax(f12)  
 
     sf      lista,f2
     addf    f9,f9,f2
 
 ;; ================== INDICE 1 =========================
 ;; vMax * vT
-    multf   f3,f12,f0
-        divf    f8,f25,f10 ;; f8= 1.0/vMed(f10)
+    multf   f3,f12,f0  ;; Correspondiente a INDICE 1
+    divf    f8,f25,f10 ;; f8= 1.0/vMed(f10) 
 
     sf      lista+4,f3
-    sf          secuencia_valor_medio,f10
-    multf   f4,f10,f0
+    sf      secuencia_valor_medio,f10
+    multf   f4,f10,f0 ;; Correspondiente a INDICE 2
 
     addf    f9,f9,f3
 
@@ -132,7 +130,7 @@ rellenar_lista:
 
 ;; Para optimizar ciclos y reducir divisones se hace lo siguiente
 
-    multf   f7,f6,f2
+    multf   f7,f6,f2  
 
     divf    f14,f25,f5 ;; f14= 1.0/vIni(f5)
 
@@ -141,10 +139,10 @@ rellenar_lista:
 ;; ================== INDICE 4 =========================
 ;; (vIni/vMed) * vT
 
-    multf   f13,f8,f2
+    multf   f13,f8,f2   
     sf      lista+12,f7
     addf    f9,f9,f7
-        multf   f15,f14,f3
+    multf   f15,f14,f3  ;; Correspondiente a INDICE 5
 
     sf      lista+16,f13
     addf    f9,f9,f13
@@ -158,9 +156,9 @@ rellenar_lista:
 ;; (vMax/vMed) * vT
 
     multf   f17,f8,f3
-        sf      lista+20,f15
+    sf      lista+20,f15
     addf    f9,f9,f15
-        multf   f19,f14,f4
+    multf   f19,f14,f4 ;; Correspondiente a INDICE 7
 
     sf      lista+24,f17
     addf    f9,f9,f17
@@ -174,7 +172,7 @@ rellenar_lista:
 ;; (vMed/vMax) * vT
 
     multf   f21,f6,f4
-        sf      lista+28,f19
+    sf      lista+28,f19
     addf    f9,f9,f19
     sf      lista+32,f21
     addf    f9,f9,f21
