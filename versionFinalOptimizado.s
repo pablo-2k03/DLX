@@ -1,7 +1,7 @@
 	.data
 
 ;; VARIABLES DE ENTRADA Y SALIDA: NO MODIFICAR ORDEN 
-valor_inicial:	.word	10
+valor_inicial:	.word	97
 
 ;; VARIABLES DE SALIDA
 secuencia:		.space	120*4
@@ -14,53 +14,53 @@ lista_valor_medio:	.float	0
 ;; Otras variables
 contador:		.word	0
 lista_tamanho:	.word	0
-lista_numeros:  .float  9.0
+lista_numeros:  .float  9.0  
 valor_uno:      .float  1.0
-
 .text
 .global main
 
 main:
 
-    lw		r1, valor_inicial ;; Cargar valor inicial en r1
-    lf      f23,lista_numeros
-    lw		r8, contador ;; Cargar contador en r21
+    lw		r1, valor_inicial       ;; Cargar valor inicial en r1
+    lf      f23,lista_numeros       ;; Cargar valor 9.0 en f23
+    lw		r8, contador            ;; Cargar contador en r21
     
-    sw      secuencia_maximo,r0
-    sw      contador,r0
+    sw      secuencia_maximo,r0     ;; Iniciar secuencia_maximo con valor 0
+    sw      contador,r0             ;; Iniciar contador con valor 0
 
-    add		r2,r0,r1  ; r2 = N
-	add		r3,r0,r2 ; r3 = A[N-1]
-	add		r4,r0,r2 ; r4 = A[N]
-	add 	r5,r0,3
-
-
+    add		r2,r0,r1                ;; r2 = N
+	add		r3,r0,r2                ;; r3 = A[N-1]
+	add		r4,r0,r2                ;; r4 = A[N]
+	add 	r5,r0,3                 ;;
 
 loop:
 
-    lw		r6, secuencia_maximo ;; Cargar máximo de la secuencia en r6
-	lw		r7, secuencia_tamanho ;; Cargar tamaño de la secuencia en r7
+    lw		r6, secuencia_maximo    ;; Cargar máximo de la secuencia en r6
+	lw		r7, secuencia_tamanho   ;; Cargar tamaño de la secuencia en r7
 
+    add		r8, r8, r3              ;; Sumar al contador el valor actual de la secuencia
+    addi	r20, r7, 1              ;; Incrementar tamaño de la secuencia
 
-	addi	r20, r7, 1 ;; Incrementar tamaño de la secuencia
-    add		r8, r8, r3 ;; Sumar al contador el valor actual de la secuencia
-    
     slli    r24, r7, 2              ;; Multiplicar el tamaño de la secuencia por 4 (desplazamiento de bits)
 
-    sw		secuencia_tamanho, r20  
-    sw 		secuencia(r24), r3 
-    sw		contador, r8 ;; Guardar contador en r8
+    sw		secuencia_tamanho, r20  ;; Almacenamos el tamaño de la secuencia en r20
+    sw 		secuencia(r24), r3      ;; Almacenamos el valor actual en la secuencia
 
-    ;;Verificar si el valor actual es mayor al máximo
-    slt r26, r3, r6 ;; Comprobar si r3 < r21, en caso afirmativo, r26 = 1
-    beqz r26, maximo ;; Si r26 = 0, saltar a maximo
+    ;;Verificamos si el valor actual es mayor al máximo
+
+    slt r26, r3, r6                 ;; Comprobar si r3 < r21, en caso afirmativo, r26 = 1
+    sw		contador, r8            ;; Guardar contador en r8
+    beqz r26, maximo                ;; Si r26 = 0, saltar a maximo
 
 continua:
-    subi    r6,r3,1
-    beqz r6, finish
+    subi r6,r3,1
     andi r27,r3,1
+    beqz r6, finish
     beqz r27, par
-    mult r4,r3,r5
+
+    ;mult r4,r3,r5 ;; Valor actual por 3
+    add r22, r3, r3
+    add r4, r22, r3
     addi r4,r4,1
     add r3,r4,r0
     j loop
@@ -69,13 +69,13 @@ par:
     add r3,r4,r0
     j loop
 maximo:
-	sw		secuencia_maximo, r3 ;; Guardar valor actual como máximo
+	sw		secuencia_maximo, r3    ;; Guardar valor actual como máximo
     j continua
 
 finish:
     ;; Calculamos el valor medio de la secuencia
-    lw      r7, secuencia_tamanho ;; Cargar tamaño de la secuencia en r7
-    lf f25, valor_uno ;; En f25 tenemos 1.0
+    lw r7, secuencia_tamanho        ;; Cargar tamaño de la secuencia en r7
+    lf f25, valor_uno               ;; En f25 tenemos 1.0
 
     movi2fp f0, r7
     movi2fp f11,r8
@@ -176,7 +176,7 @@ rellenar_lista:
     addf    f9,f9,f19
     sf      lista+32,f21
     addf    f9,f9,f21
-
+    
 
 ;; CALCULAMOS VALOR MEDIO DE LA LISTA
 
