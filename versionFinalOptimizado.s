@@ -22,6 +22,7 @@ valor_uno:      .float  1.0
 main:
 
     lw		r1, valor_inicial       ;; Cargar valor inicial en r1
+    lw		r7, secuencia_tamanho   ;; Cargar tamaño de la secuencia en r7
     lf      f23,lista_numeros       ;; Cargar valor 9.0 en f23
     lw		r8, contador            ;; Cargar contador en r21
     
@@ -36,20 +37,21 @@ main:
 loop:
 
     lw		r6, secuencia_maximo    ;; Cargar máximo de la secuencia en r6
-	lw		r7, secuencia_tamanho   ;; Cargar tamaño de la secuencia en r7
+	
 
     add		r8, r8, r3              ;; Sumar al contador el valor actual de la secuencia
-    addi	r20, r7, 1              ;; Incrementar tamaño de la secuencia
+    addi	r7, r7, 1              ;; Incrementar tamaño de la secuencia
 
-    slli    r24, r7, 2              ;; Multiplicar el tamaño de la secuencia por 4 (desplazamiento de bits)
+    
 
-    sw		secuencia_tamanho, r20  ;; Almacenamos el tamaño de la secuencia en r20
+    sw		secuencia_tamanho, r7  ;; Almacenamos el tamaño de la secuencia en r20
     sw 		secuencia(r24), r3      ;; Almacenamos el valor actual en la secuencia
-
+    slli    r24, r7, 2              ;; Multiplicar el tamaño de la secuencia por 4 (desplazamiento de bits)
+    
     ;;Verificamos si el valor actual es mayor al máximo
 
     slt r26, r3, r6                 ;; Comprobar si r3 < r21, en caso afirmativo, r26 = 1
-    sw		contador, r8            ;; Guardar contador en r8
+    sw	contador, r8            ;; Guardar contador en r8
     beqz r26, maximo                ;; Si r26 = 0, saltar a maximo
 
 continua:
@@ -69,7 +71,7 @@ par:
     add r3,r4,r0
     j loop
 maximo:
-	sw		secuencia_maximo, r3    ;; Guardar valor actual como máximo
+	sw	secuencia_maximo, r3    ;; Guardar valor actual como máximo
     j continua
 
 finish:
