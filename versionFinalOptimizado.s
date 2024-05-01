@@ -26,34 +26,22 @@ main:
     lw		r8, contador            ;; Cargar contador en r21
     lw      r11, secuencia_maximo   ;; En r11 esta el valor maximo inicial = 0
     lf      f23, lista_numeros      ;; Cargar valor 9.0 en f23
-    
-    sw      secuencia_maximo,r0     ;; Iniciar secuencia_maximo con valor 0
-    sw      contador,r0             ;; Iniciar contador con valor 0
 
     add		r2,r0,r1                ;; r2 = N
 	add		r3,r0,r2                ;; r3 = A[N-1]
 	add		r4,r0,r2                ;; r4 = A[N]
 	add 	r5,r0,3                 ;;
 
-    
-
 loop:
 
-    ;;lw		r6, secuencia_maximo    ;; Cargar máximo de la secuencia en r6
-	
     add		r8, r8, r3              ;; Sumar al contador el valor actual de la secuencia
     addi	r7, r7, 1               ;; Incrementar tamaño de la secuencia
 
-    
-
-    sw		secuencia_tamanho, r7   ;; Almacenamos el tamaño de la secuencia en r7
     sw 		secuencia(r24), r3      ;; Almacenamos el valor actual en la secuencia
     slli    r24, r7, 2              ;; Multiplicar el tamaño de la secuencia por 4 (desplazamiento de bits)
     
     ;;Verificamos si el valor actual es mayor al máximo
-
-    ;;slt r26, r3, r6                 ;; Comprobar si r3 < r6, en caso afirmativo, r26 = 1
-    slt r26, r3, r11
+    slt r26, r3, r11                ;; Comprobar si r3 < r11 (vActual < secMax), en caso afirmativo r26=1
     sw	contador, r8                ;; Guardar contador en r8
     beqz r26, maximo                ;; Si r26 = 0, saltar a maximo
 
@@ -63,7 +51,6 @@ continua:
     beqz r6, finish
     beqz r27, par
 
-    ;mult r4,r3,r5 ;; Valor actual por 3
     add r22, r3, r3
     add r4, r22, r3
     addi r4,r4,1
@@ -80,7 +67,6 @@ maximo:
 
 finish:
     ;; Calculamos el valor medio de la secuencia
-    lw r7, secuencia_tamanho        ;; Cargar tamaño de la secuencia en r7
     lf f25, valor_uno               ;; En f25 tenemos 1.0
 
     movi2fp f0, r7
@@ -95,7 +81,6 @@ finish:
 
     cvti2f  f12,f12              ;; Pasamos a flotante el máximo
 
-    lw      r1, valor_inicial ;; Cargar valor inicial en r1
 
     movi2fp f5, r1
     cvti2f  f5,f5               ;; Pasamos el valor inicial a flotante
